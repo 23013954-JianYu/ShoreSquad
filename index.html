@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="ShoreSquad - Rally your crew, track weather, and hit the next beach cleanup with our dope map app!">
+    <meta name="theme-color" content="#0066CC">
+    <title>ShoreSquad - Beach Cleanup Made Social</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <!-- Leaflet CSS for maps -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" role="navigation" aria-label="Main navigation">
+        <div class="nav-container">
+            <div class="logo">
+                <span class="logo-icon">🌊</span>
+                <span class="logo-text">ShoreSquad</span>
+            </div>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#map" data-section="map" class="nav-link active">Map</a></li>
+                <li><a href="#weather" data-section="weather" class="nav-link">Weather</a></li>
+                <li><a href="#events" data-section="events" class="nav-link">Events</a></li>
+                <li><a href="#crew" data-section="crew" class="nav-link">My Crew</a></li>
+            </ul>
+            <button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="hero" role="banner">
+        <div class="hero-content">
+            <h1>Rally Your Crew</h1>
+            <p>Track weather, find beaches, and make eco-action fun</p>
+            <button class="cta-button" id="startButton" aria-label="Get started with ShoreSquad">Get Started</button>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container">
+        <!-- Map Section -->
+        <section id="map" class="section map-section" role="region" aria-label="Beach locations map">
+            <h2>Find Your Beach</h2>
+            <div class="map-container">
+                <div id="map" class="map" style="height: 500px;"></div>
+            </div>
+            <div class="map-controls">
+                <input type="text" id="searchInput" placeholder="Search for beaches..." aria-label="Search for beaches">
+                <button id="locationButton" aria-label="Use my current location">📍 My Location</button>
+            </div>
+        </section>
+
+        <!-- Weather Section -->
+        <section id="weather" class="section weather-section" role="region" aria-label="Weather information">
+            <h2>Check the Conditions</h2>
+            <div class="weather-grid" id="weatherGrid">
+                <div class="weather-card" role="article">
+                    <div class="weather-icon">🌞</div>
+                    <h3>Temperature</h3>
+                    <p class="weather-value" id="tempValue">--°C</p>
+                </div>
+                <div class="weather-card" role="article">
+                    <div class="weather-icon">💨</div>
+                    <h3>Wind Speed</h3>
+                    <p class="weather-value" id="windValue">-- km/h</p>
+                </div>
+                <div class="weather-card" role="article">
+                    <div class="weather-icon">💧</div>
+                    <h3>Humidity</h3>
+                    <p class="weather-value" id="humidityValue">--%</p>
+                </div>
+                <div class="weather-card" role="article">
+                    <div class="weather-icon">🌊</div>
+                    <h3>UV Index</h3>
+                    <p class="weather-value" id="uvValue">--</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Events Section -->
+        <section id="events" class="section events-section" role="region" aria-label="Cleanup events">
+            <h2>Upcoming Cleanups</h2>
+            <div class="events-container" id="eventsContainer">
+                <div class="event-card" role="article">
+                    <div class="event-header">
+                        <h3>Sunset Beach Cleanup</h3>
+                        <span class="event-badge">Popular</span>
+                    </div>
+                    <p class="event-date">📅 Dec 15, 2025 • 2:00 PM</p>
+                    <p class="event-location">📍 Sunset Beach, CA</p>
+                    <p class="event-crew">👥 12 Crew Members</p>
+                    <button class="btn-secondary" aria-label="Join this cleanup event">Join Event</button>
+                </div>
+                <div class="event-card" role="article">
+                    <div class="event-header">
+                        <h3>Marina Bay Restoration</h3>
+                        <span class="event-badge">New</span>
+                    </div>
+                    <p class="event-date">📅 Dec 18, 2025 • 10:00 AM</p>
+                    <p class="event-location">📍 Marina Bay, SF</p>
+                    <p class="event-crew">👥 8 Crew Members</p>
+                    <button class="btn-secondary" aria-label="Join this cleanup event">Join Event</button>
+                </div>
+            </div>
+            <button class="btn-primary" id="createEventBtn" aria-label="Create a new cleanup event">+ Create Event</button>
+        </section>
+
+        <!-- Crew Section -->
+        <section id="crew" class="section crew-section" role="region" aria-label="My crew members">
+            <h2>Your ShoreSquad</h2>
+            <div class="crew-container" id="crewContainer">
+                <div class="crew-member" role="article">
+                    <div class="member-avatar">🏄</div>
+                    <h4>Alex Wave</h4>
+                    <p class="member-stats">12 cleanups</p>
+                </div>
+                <div class="crew-member" role="article">
+                    <div class="member-avatar">🚣</div>
+                    <h4>Jordan Tide</h4>
+                    <p class="member-stats">8 cleanups</p>
+                </div>
+                <div class="crew-member" role="article">
+                    <div class="member-avatar">🏖️</div>
+                    <h4>Casey Sand</h4>
+                    <p class="member-stats">15 cleanups</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer" role="contentinfo">
+        <div class="footer-content">
+            <p>&copy; 2025 ShoreSquad. Rally for a cleaner ocean. 🌊</p>
+            <div class="footer-links">
+                <a href="#about">About</a>
+                <a href="#privacy">Privacy</a>
+                <a href="#contact">Contact</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
