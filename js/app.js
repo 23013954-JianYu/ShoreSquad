@@ -19,7 +19,7 @@ const app = {
 document.addEventListener('DOMContentLoaded', () => {
     console.log('🌊 ShoreSquad App Initialized');
     
-    initializeMap();
+    // Skip Leaflet map initialization - using Google Maps iframe instead
     initializeNavigation();
     initializeEventListeners();
     loadWeather();
@@ -198,47 +198,114 @@ function initializeEventListeners() {
 }
 
 // ==========================================
-// Weather Integration
+// Weather Integration (NEA API)
 // ==========================================
 
 function loadWeather() {
-    // Simulated weather data (replace with real API call)
-    const mockWeatherData = {
-        temp: 22,
-        wind: 12,
-        humidity: 65,
-        uv: 6
-    };
+    const apiUrl = 'https://api.data.gov.sg/v1/environment/4-day-weather-forecast';
     
-    updateWeatherUI(mockWeatherData);
-    
-    // In production, use OpenWeatherMap API:
-    // fetchWeatherFromAPI(latitude, longitude);
-}
-
-function updateWeatherUI(data) {
-    document.getElementById('tempValue').textContent = `${data.temp}°C`;
-    document.getElementById('windValue').textContent = `${data.wind} km/h`;
-    document.getElementById('humidityValue').textContent = `${data.humidity}%`;
-    document.getElementById('uvValue').textContent = `${data.uv}`;
-}
-
-function fetchWeatherFromAPI(lat, lng) {
-    // Example API call structure
-    const apiKey = 'YOUR_WEATHER_API_KEY';
-    const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lng}&appid=${apiKey}&units=metric`;
-    
-    fetch(url)
-        .then(response => response.json())
-        .then(data => {
-            updateWeatherUI({
-                temp: Math.round(data.main.temp),
-                wind: Math.round(data.wind.speed * 3.6), // m/s to km/h
-                humidity: data.main.humidity,
-                uv: 'API limit'
-            });
+    fetch(apiUrl)
+        .then(response => {
+            if (!response.ok) throw new Error('Weather API failed');
+            return response.json();
         })
-        .catch(error => console.error('Weather API error:', error));
+        .then(data => {
+            console.log('✅ Weather data retrieved:', data);
+            displayWeatherForecast(data);
+        })
+        .catch(error => {
+            console.error('❌ Weather API error:', error);
+            showFallbackWeather();
+        });
+}
+
+function displayWeatherForecast(data) {
+    try {
+        const forecastData = data.items[0];
+        if (!forecastData || !forecastData.forecasts) throw new Error('No forecast data');
+        
+        // Update the timestamp
+        const updateTime = new Date(forecastData.update_timestamp).toLocaleString('en-SG', {
+            day: '2-digit',
+            month: 'short',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            timeZone: 'Asia/Singapore'
+        });
+        document.getElementById('weatherUpdated').textContent = `Last updated: ${updateTime} SGT`;
+        
+        // Populate the 4-day forecast
+        const weatherGrid = document.getElementById('weatherGrid');
+        weatherGrid.innerHTML = '';
+        
+        forecastData.forecasts.forEach((forecast, index) => {
+            const date = new Date(forecast.date);
+            const dayName = date.toLocaleDateString('en-SG', { weekday: 'short' });
+            const dateStr = date.toLocaleDateString('en-SG', { month: 'short', day: 'numeric' });
+            
+            const weatherCard = document.createElement('div');
+            weatherCard.className = 'weather-card';
+            weatherCard.setAttribute('role', 'article');
+            
+            // Weather emoji based on forecast text
+            const emoji = getWeatherEmoji(forecast.forecast);
+            
+            weatherCard.innerHTML = `
+                <div class="forecast-date">
+                    <div class="day-name">${dayName}</div>
+                    <div class="date">${dateStr}</div>
+                </div>
+                <div class="weather-emoji">${emoji}</div>
+                <div class="forecast-text">${forecast.forecast}</div>
+                <div class="weather-details">
+                    <div class="temp-range">
+                        <span class="label">🌡️ Temp:</span>
+                        <span class="value">${forecast.temperature.low}–${forecast.temperature.high}°C</span>
+                    </div>
+                    <div class="humidity-range">
+                        <span class="label">💧 Humidity:</span>
+                        <span class="value">${forecast.relative_humidity.low}–${forecast.relative_humidity.high}%</span>
+                    </div>
+                    <div class="wind-range">
+                        <span class="label">💨 Wind:</span>
+                        <span class="value">${forecast.wind.speed.low}–${forecast.wind.speed.high} km/h ${forecast.wind.direction}</span>
+                    </div>
+                </div>
+            `;
+            
+            weatherGrid.appendChild(weatherCard);
+        });
+    } catch (error) {
+        console.error('Error displaying weather:', error);
+        showFallbackWeather();
+    }
+}
+
+function getWeatherEmoji(forecastText) {
+    const text = forecastText.toLowerCase();
+    
+    if (text.includes('thundery') || text.includes('thunderstorm')) return '⛈️';
+    if (text.includes('rainy') || text.includes('rain') || text.includes('shower')) return '🌧️';
+    if (text.includes('cloudy') || text.includes('cloud')) return '☁️';
+    if (text.includes('sunny') || text.includes('fine')) return '☀️';
+    if (text.includes('cool')) return '🌤️';
+    if (text.includes('haze')) return '🌫️';
+    if (text.includes('windy') || text.includes('strong wind')) return '💨';
+    
+    return '🌦️'; // Default partly cloudy
+}
+
+function showFallbackWeather() {
+    const weatherGrid = document.getElementById('weatherGrid');
+    const fallbackMessage = document.createElement('div');
+    fallbackMessage.className = 'weather-fallback';
+    fallbackMessage.innerHTML = `
+        <p>Unable to load real-time weather data.</p>
+        <p>Please check your internet connection and try again.</p>
+    `;
+    weatherGrid.innerHTML = '';
+    weatherGrid.appendChild(fallbackMessage);
 }
 
 // ==========================================

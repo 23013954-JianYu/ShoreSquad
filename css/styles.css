@@ -284,19 +284,32 @@ a:hover {
 
 .weather-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     gap: 1.5rem;
     margin-bottom: 2rem;
 }
 
+.weather-info-container {
+    margin-bottom: 1.5rem;
+}
+
+.weather-updated {
+    color: #666;
+    font-size: 0.9rem;
+    margin-bottom: 0;
+}
+
 .weather-card {
     background: linear-gradient(135deg, var(--white) 0%, var(--light-gray) 100%);
-    padding: 2rem;
+    padding: 1.5rem;
     border-radius: var(--border-radius);
-    text-align: center;
     box-shadow: var(--shadow-sm);
     transition: var(--transition);
     border: 2px solid transparent;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
 }
 
 .weather-card:hover {
@@ -305,20 +318,81 @@ a:hover {
     border-color: var(--fresh-cyan);
 }
 
-.weather-icon {
-    font-size: 2.5rem;
-    margin-bottom: 1rem;
+.forecast-date {
+    margin-bottom: 0.75rem;
+    width: 100%;
 }
 
-.weather-card h3 {
-    color: var(--dark-navy);
-}
-
-.weather-value {
-    font-size: 1.75rem;
+.day-name {
     font-weight: 700;
-    color: var(--ocean-blue);
-    margin-bottom: 0;
+    color: var(--dark-navy);
+    font-size: 1rem;
+}
+
+.date {
+    color: #999;
+    font-size: 0.85rem;
+}
+
+.weather-emoji {
+    font-size: 2.5rem;
+    margin: 0.75rem 0;
+}
+
+.forecast-text {
+    color: var(--dark-navy);
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    line-height: 1.3;
+    min-height: 2.6rem;
+}
+
+.weather-details {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    font-size: 0.85rem;
+}
+
+.temp-range,
+.humidity-range,
+.wind-range {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem;
+    background-color: rgba(0, 102, 204, 0.05);
+    border-radius: 6px;
+}
+
+.temp-range .label,
+.humidity-range .label,
+.wind-range .label {
+    color: var(--dark-navy);
+    font-weight: 600;
+}
+
+.temp-range .value,
+.humidity-range .value,
+.wind-range .value {
+    color: var(--primary-blue);
+    font-weight: 600;
+}
+
+.weather-fallback {
+    grid-column: 1 / -1;
+    padding: 2rem;
+    background-color: #fff3cd;
+    border-left: 4px solid #ffc107;
+    border-radius: var(--border-radius);
+    text-align: center;
+}
+
+.weather-fallback p {
+    margin-bottom: 0.5rem;
+    color: #856404;
 }
 
 /* ==========================================
